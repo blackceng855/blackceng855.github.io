@@ -3,7 +3,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
-    <title>Archives | blackceng的小窝</title>
+    <title>sql注入基础 | blackceng的小窝</title>
     <meta name="author" content="blackceng" />
     <meta name="description" content="我们要做的，就是追上那该死的火车，CJ！" />
     <meta name="keywords" content="" />
@@ -37,6 +37,10 @@
 
 
 <script src="/js/lib/preview.js"></script>
+
+
+
+
 
 
 
@@ -150,164 +154,99 @@
 </transition>
 
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>sql注入基础</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/12/24
+        </span>
+        
+        <span class="category">
+            <a href="/categories/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84sql%E6%B3%A8%E5%85%A5%E7%94%9F%E6%B4%BB/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                从零开始的sql注入生活
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
             
-<div id="archives">
-    
-    <div id="timeline-wrap" ref="timeline">
-        
-        <div class="timeline" data-title="我的第一次博客搭建过程">
-            <div class="timeline-tail"></div>
-            <div class="timeline-content">
-                <div class="item-time">2025/11/7</div>
-                <a href="/2025/11/07/My-New-Post/">
-                    <h3>我的第一次博客搭建过程</h3>
+            
+            <span class="tag">
+                
+                <a href="/tags/sql-lab/" style="color: #ffa2c4">
+                    sql_lab
                 </a>
-                <div class="info">
-                    
-                    <span class="category">
-                        <a href="/categories/%E5%BF%83%E8%B7%AF%E5%8E%86%E7%A8%8B/">
-                            <span class="icon">
-                                <i class="fa-solid fa-bookmark fa-fw"></i>
-                            </span>
-                            心路历程
-                        </a>
-                    </span>
-                    
-                    
-                    <span class="tags">
-                        <span class="icon">
-                            <i class="fa-solid fa-tags fa-fw"></i>
-                        </span>
-                        
-                        
-                        <span class="tag">
-                            
-                            <a href="/tags/hexo/" style="color: #03a9f4">
-                                hexo
-                            </a>
-                        </span>
-                        
-                    </span>
-                    
-                </div>
-            </div>
-        </div>
-        
-        <div class="timeline" data-title="进入sql注入世界的第一天">
-            <div class="timeline-tail"></div>
-            <div class="timeline-content">
-                <div class="item-time">2025/12/22</div>
-                <a href="/2025/12/22/sql-lab-less1-4/">
-                    <h3>进入sql注入世界的第一天</h3>
-                </a>
-                <div class="info">
-                    
-                    <span class="category">
-                        <a href="/categories/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84sql%E6%B3%A8%E5%85%A5%E7%94%9F%E6%B4%BB/">
-                            <span class="icon">
-                                <i class="fa-solid fa-bookmark fa-fw"></i>
-                            </span>
-                            从零开始的sql注入生活
-                        </a>
-                    </span>
-                    
-                    
-                    <span class="tags">
-                        <span class="icon">
-                            <i class="fa-solid fa-tags fa-fw"></i>
-                        </span>
-                        
-                        
-                        <span class="tag">
-                            
-                            <a href="/tags/sql-lab/" style="color: #00bcd4">
-                                sql_lab
-                            </a>
-                        </span>
-                        
-                    </span>
-                    
-                </div>
-            </div>
-        </div>
-        
-        <div class="timeline" data-title="less5">
-            <div class="timeline-tail"></div>
-            <div class="timeline-content">
-                <div class="item-time">2025/12/24</div>
-                <a href="/2025/12/24/less5-7/">
-                    <h3>less5</h3>
-                </a>
-                <div class="info">
-                    
-                    <span class="category">
-                        <a href="/categories/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84sql%E6%B3%A8%E5%85%A5%E7%94%9F%E6%B4%BB/">
-                            <span class="icon">
-                                <i class="fa-solid fa-bookmark fa-fw"></i>
-                            </span>
-                            从零开始的sql注入生活
-                        </a>
-                    </span>
-                    
-                    
-                    <span class="tags">
-                        <span class="icon">
-                            <i class="fa-solid fa-tags fa-fw"></i>
-                        </span>
-                        
-                        
-                        <span class="tag">
-                            
-                            <a href="/tags/sql-lab/" style="color: #ff7d73">
-                                sql_lab
-                            </a>
-                        </span>
-                        
-                    </span>
-                    
-                </div>
-            </div>
-        </div>
-        
-        <div class="timeline" data-title="sql注入基础">
-            <div class="timeline-tail"></div>
-            <div class="timeline-content">
-                <div class="item-time">2025/12/24</div>
-                <a href="/2025/12/24/base/">
-                    <h3>sql注入基础</h3>
-                </a>
-                <div class="info">
-                    
-                    <span class="category">
-                        <a href="/categories/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84sql%E6%B3%A8%E5%85%A5%E7%94%9F%E6%B4%BB/">
-                            <span class="icon">
-                                <i class="fa-solid fa-bookmark fa-fw"></i>
-                            </span>
-                            从零开始的sql注入生活
-                        </a>
-                    </span>
-                    
-                    
-                    <span class="tags">
-                        <span class="icon">
-                            <i class="fa-solid fa-tags fa-fw"></i>
-                        </span>
-                        
-                        
-                        <span class="tag">
-                            
-                            <a href="/tags/sql-lab/" style="color: #03a9f4">
-                                sql_lab
-                            </a>
-                        </span>
-                        
-                    </span>
-                    
-                </div>
-            </div>
-        </div>
+            </span>
+            
+        </span>
         
     </div>
+    
+    <div class="content" v-pre>
+        <p><strong>一: SQL基础语法知识</strong></p>
+<h5 id="1-SELECT查询语句"><a href="#1-SELECT查询语句" class="headerlink" title="1. SELECT查询语句"></a>1. SELECT查询语句</h5><p><code>SELECT 列名1, 列名2</code><br><code>FROM 表名</code><br><code>WHERE 条件</code><br><code>ORDER BY 排序字段</code><br><code>LIMIT 返回行数;</code></p>
+<p>SELECT：指定要检索的列<br>FROM：指定数据来源的表<br>WHERE：过滤结果的条件语句<br>ORDER BY：结果排序（<em><strong>ASC升序&#x2F;DESC降序</strong></em>）<br>LIMIT：限制返回行数</p>
+<h5 id="2-SQL执行顺序"><a href="#2-SQL执行顺序" class="headerlink" title="2. SQL执行顺序"></a>2. SQL执行顺序</h5><p><code>FROM → ON → JOIN → WHERE → GROUP BY  → SELECT → ORDER BY → LIMIT</code></p>
+<h5 id="3-AND-OR运算符"><a href="#3-AND-OR运算符" class="headerlink" title="3. AND&#x2F;OR运算符"></a>3. AND&#x2F;OR运算符</h5><p>&#x2F;* 基本用法 *&#x2F;<br><code>SELECT * FROM users WHERE username = &#39;admin&#39; AND password = &#39;123456&#39;;</code><br><code>SELECT * FROM products WHERE category = &#39;books&#39; OR category = &#39;electronics&#39;;</code></p>
+<h5 id="3-1-AND-OR优先级规则"><a href="#3-1-AND-OR优先级规则" class="headerlink" title="3.1. AND&#x2F;OR优先级规则"></a>3.1. AND&#x2F;OR优先级规则</h5><p><em><strong>AND优先级高于OR</strong></em></p>
+<p><code>条件1 OR 条件2 AND 条件3</code><br><code>-- 等价于</code><br><code>条件1 OR (条件2 AND 条件3)</code><br><code>-- 使用括号可以改变优先级</code><br><code>(条件1 OR 条件2) AND 条件3</code></p>
+<h5 id="4-SQL注释方法"><a href="#4-SQL注释方法" class="headerlink" title="4. SQL注释方法"></a>4. SQL注释方法</h5><p>注释类型   	符号	    说明		注入<br>单行注释		–		需空格结尾	id&#x3D;1’ –<br>单行注释		#		MySQL特有	id&#x3D;1’ #<br>多行注释		&#x2F;<em>内容</em>&#x2F;		可跨行		id&#x3D;1’&#x2F;<em>注入内容</em>&#x2F;</p>
+<h4 id="二-SQL注入关键函数"><a href="#二-SQL注入关键函数" class="headerlink" title="二: SQL注入关键函数"></a>二: SQL注入关键函数</h4><h5 id="1-UNION操作符"><a href="#1-UNION操作符" class="headerlink" title="1. UNION操作符"></a>1. UNION操作符</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SELECT col1, col2 FROM table1 </span><br><span class="line">UNION </span><br><span class="line">SELECT colA, colB FROM table2;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>前后SELECT列数必须相同,如上面语句,都需要是两列<br>对应列数据类型需兼容</p>
+<p>union操作符可以使两条命令一起执行。</p>
+<h5 id="2-LIMIT分页控制"><a href="#2-LIMIT分页控制" class="headerlink" title="2. LIMIT分页控制"></a>2. LIMIT分页控制</h5><p><code>/* 获取第一行 */</code><br><code>SELECT * FROM users LIMIT 1;</code></p>
+<p><code>/* 获取第2-5行（索引从0开始,4条记录） */</code><br><code>SELECT * FROM users LIMIT 1,4;</code></p>
+<p>limit（）（）前面表示从第几条开始，后面表示要输出几条。</p>
+<h5 id="3-GROUP-CONCAT-数据聚合（简单来说就是多行数据结果连接为一行）"><a href="#3-GROUP-CONCAT-数据聚合（简单来说就是多行数据结果连接为一行）" class="headerlink" title="3. GROUP_CONCAT() 数据聚合（简单来说就是多行数据结果连接为一行）"></a>3. GROUP_CONCAT() 数据聚合（简单来说就是多行数据结果连接为一行）</h5><p><code>/* 获取所有表名（逗号分隔） */</code><br><code>SELECT GROUP_CONCAT(table_name)</code><br><code>FROM information_schema.tables</code><br><code>WHERE table_schema = database();</code></p>
+<p>当数据结果非常多时，可以使用group_concat_max_len()</p>
+<h5 id="4-substring-substr分页控制查看"><a href="#4-substring-substr分页控制查看" class="headerlink" title="4. substring&#x2F;substr分页控制查看"></a>4. substring&#x2F;substr分页控制查看</h5><p>substring&#x2F;substr(‘str’,1,1,)<br>第一个参数表示要控制的字符串(将要查询的字段包裹，对于限制条件不需要包裹)<br>第二个参数表示开始查看的位置<br>第三个参数表示步长<br>示例：</p>
+<p><code>select substring(group_concat(column_name),10,10) from information_schema.columns where table_schema=database() and table_name=&quot;users&quot;</code></p>
+<p><strong>三: information_schema数据库</strong></p>
+<table>
+<thead>
+<tr>
+<th>表名</th>
+<th>字段名</th>
+<th>记录内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SCHEMATA</td>
+<td>schema_name</td>
+<td>所有数据库名</td>
+</tr>
+<tr>
+<td>TABLES</td>
+<td>table_schema table_name</td>
+<td>表所属的数据库 表的名称</td>
+</tr>
+<tr>
+<td>COLUMNS</td>
+<td>table_name column_name</td>
+<td>列所属的表名 列的名称</td>
+</tr>
+</tbody></table>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
 </div>
 
             <footer id="footer">
@@ -338,6 +277,12 @@
         
     </div>
     <script src="/js/main.js"></script>
+    
+    
+
+
+
+
     
 <canvas
     id="fireworks"
