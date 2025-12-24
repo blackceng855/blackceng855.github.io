@@ -207,50 +207,7 @@
     <div class="description">
         <div class="content" v-pre>
             
-            <p><strong>一: SQL基础语法知识</strong></p>
-<h5 id="1-SELECT查询语句"><a href="#1-SELECT查询语句" class="headerlink" title="1. SELECT查询语句"></a>1. SELECT查询语句</h5><p><code>SELECT 列名1, 列名2</code><br><code>FROM 表名</code><br><code>WHERE 条件</code><br><code>ORDER BY 排序字段</code><br><code>LIMIT 返回行数;</code></p>
-<p>SELECT：指定要检索的列<br>FROM：指定数据来源的表<br>WHERE：过滤结果的条件语句<br>ORDER BY：结果排序（<em><strong>ASC升序&#x2F;DESC降序</strong></em>）<br>LIMIT：限制返回行数</p>
-<h5 id="2-SQL执行顺序"><a href="#2-SQL执行顺序" class="headerlink" title="2. SQL执行顺序"></a>2. SQL执行顺序</h5><p><code>FROM → ON → JOIN → WHERE → GROUP BY  → SELECT → ORDER BY → LIMIT</code></p>
-<h5 id="3-AND-OR运算符"><a href="#3-AND-OR运算符" class="headerlink" title="3. AND&#x2F;OR运算符"></a>3. AND&#x2F;OR运算符</h5><p>&#x2F;* 基本用法 *&#x2F;<br><code>SELECT * FROM users WHERE username = &#39;admin&#39; AND password = &#39;123456&#39;;</code><br><code>SELECT * FROM products WHERE category = &#39;books&#39; OR category = &#39;electronics&#39;;</code></p>
-<h5 id="3-1-AND-OR优先级规则"><a href="#3-1-AND-OR优先级规则" class="headerlink" title="3.1. AND&#x2F;OR优先级规则"></a>3.1. AND&#x2F;OR优先级规则</h5><p><em><strong>AND优先级高于OR</strong></em></p>
-<p><code>条件1 OR 条件2 AND 条件3</code><br><code>-- 等价于</code><br><code>条件1 OR (条件2 AND 条件3)</code><br><code>-- 使用括号可以改变优先级</code><br><code>(条件1 OR 条件2) AND 条件3</code></p>
-<h5 id="4-SQL注释方法"><a href="#4-SQL注释方法" class="headerlink" title="4. SQL注释方法"></a>4. SQL注释方法</h5><p>注释类型   	符号	    说明		注入<br>单行注释		–		需空格结尾	id&#x3D;1’ –<br>单行注释		#		MySQL特有	id&#x3D;1’ #<br>多行注释		&#x2F;<em>内容</em>&#x2F;		可跨行		id&#x3D;1’&#x2F;<em>注入内容</em>&#x2F;</p>
-<h4 id="二-SQL注入关键函数"><a href="#二-SQL注入关键函数" class="headerlink" title="二: SQL注入关键函数"></a>二: SQL注入关键函数</h4><h5 id="1-UNION操作符"><a href="#1-UNION操作符" class="headerlink" title="1. UNION操作符"></a>1. UNION操作符</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SELECT col1, col2 FROM table1 </span><br><span class="line">UNION </span><br><span class="line">SELECT colA, colB FROM table2;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>前后SELECT列数必须相同,如上面语句,都需要是两列<br>对应列数据类型需兼容</p>
-<p>union操作符可以使两条命令一起执行。</p>
-<h5 id="2-LIMIT分页控制"><a href="#2-LIMIT分页控制" class="headerlink" title="2. LIMIT分页控制"></a>2. LIMIT分页控制</h5><p><code>/* 获取第一行 */</code><br><code>SELECT * FROM users LIMIT 1;</code></p>
-<p><code>/* 获取第2-5行（索引从0开始,4条记录） */</code><br><code>SELECT * FROM users LIMIT 1,4;</code></p>
-<p>limit（）（）前面表示从第几条开始，后面表示要输出几条。</p>
-<h5 id="3-GROUP-CONCAT-数据聚合（简单来说就是多行数据结果连接为一行）"><a href="#3-GROUP-CONCAT-数据聚合（简单来说就是多行数据结果连接为一行）" class="headerlink" title="3. GROUP_CONCAT() 数据聚合（简单来说就是多行数据结果连接为一行）"></a>3. GROUP_CONCAT() 数据聚合（简单来说就是多行数据结果连接为一行）</h5><p><code>/* 获取所有表名（逗号分隔） */</code><br><code>SELECT GROUP_CONCAT(table_name)</code><br><code>FROM information_schema.tables</code><br><code>WHERE table_schema = database();</code></p>
-<p>当数据结果非常多时，可以使用group_concat_max_len()</p>
-<h5 id="4-substring-substr分页控制查看"><a href="#4-substring-substr分页控制查看" class="headerlink" title="4. substring&#x2F;substr分页控制查看"></a>4. substring&#x2F;substr分页控制查看</h5><p>substring&#x2F;substr(‘str’,1,1,)<br>第一个参数表示要控制的字符串(将要查询的字段包裹，对于限制条件不需要包裹)<br>第二个参数表示开始查看的位置<br>第三个参数表示步长<br>示例：</p>
-<p><code>select substring(group_concat(column_name),10,10) from information_schema.columns where table_schema=database() and table_name=&quot;users&quot;</code></p>
-<p><strong>三: information_schema数据库</strong></p>
-<table>
-<thead>
-<tr>
-<th>表名</th>
-<th>字段名</th>
-<th>记录内容</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>SCHEMATA</td>
-<td>schema_name</td>
-<td>所有数据库名</td>
-</tr>
-<tr>
-<td>TABLES</td>
-<td>table_schema table_name</td>
-<td>表所属的数据库 表的名称</td>
-</tr>
-<tr>
-<td>COLUMNS</td>
-<td>table_name column_name</td>
-<td>列所属的表名 列的名称</td>
-</tr>
-</tbody></table>
+            <p>SQL基础语法知识</p>
 
             
         </div>
@@ -265,7 +222,7 @@
         
         <span class="tag">
             
-            <a href="/tags/sql-lab/" style="color: #03a9f4">sql_lab</a>
+            <a href="/tags/sql-lab/" style="color: #ffa2c4">sql_lab</a>
         </span>
         
     </div>
@@ -299,74 +256,7 @@
     <div class="description">
         <div class="content" v-pre>
             
-            <h1 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h1><p>在探讨SQL注入之报错注入之前，有一个前提就是页面能够响应详细的错误描述，然而mysql数据库中显示错误描述是因为开发程序中采用了<code>print_r mysql_error()</code>函数，将mysql错误信息输出。</p>
-<h2 id="updatexml（）函数"><a href="#updatexml（）函数" class="headerlink" title="updatexml（）函数"></a><strong>updatexml（）函数</strong></h2><ul>
-<li><p>updatexml（）是一个使用不同的xml标记匹配和替换xml块的函数。</p>
-</li>
-<li><p>作用：改变文档中符合条件的节点的值</p>
-</li>
-<li><p>语法： <code>updatexml（XML_document，XPath_string，new_value）</code> 第一个参数：是string格式，为XML文档对象的名称，文中为Doc 第二个参数：代表路径，Xpath格式的字符串例如&#x2F;&#x2F;title【@lang】 第三个参数：string格式，替换查找到的符合条件的数据</p>
-</li>
-<li><p>updatexml使用时，当xpath_string格式出现错误，mysql则会爆出xpath语法错误（xpath syntax）</p>
-</li>
-<li><p>例如： <code>select * from test where ide = 1 and (updatexml(1,0x7e,3));</code> 由于0x7e是~，不属于xpath语法格式，因此报出xpath语法错误。</p>
-</li>
-<li><h2 id="updatexml-的报错机制："><a href="#updatexml-的报错机制：" class="headerlink" title="updatexml 的报错机制："></a><strong><code>updatexml</code> 的报错机制</strong>：</h2></li>
-<li><p><code>updatexml()</code> 在解析错误的 XPath 时，会返回 <strong>第一个非法字符开始的部分字符串</strong>。</p>
-</li>
-<li><p>当</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">concat(1, (select database()))</span><br></pre></td></tr></table></figure>
-
-<p>生成</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;1security&quot;</span><br></pre></td></tr></table></figure>
-
-<p>时：</p>
-<ul>
-<li><code>1</code> 是合法的 XPath 数字（不会触发报错）。</li>
-<li><code>s</code>（<code>security</code> 的第一个字母）是非法 XPath 字符，所以报错从 <code>s</code> 开始截取。</li>
-</ul>
-</li>
-<li><p><strong>为什么 <code>1</code> 没有显示</strong>：</p>
-<ul>
-<li><code>1</code> 是合法的 XPath 数字，不会触发报错，所以被忽略。</li>
-<li>报错信息 <strong>只显示第一个非法位置之后的内容</strong> （即 <code>security</code>）。</li>
-</ul>
-</li>
-<li></li>
-</ul>
-<h1 id="手工注入"><a href="#手工注入" class="headerlink" title="手工注入"></a>手工注入</h1><h2 id="1-测试包裹的符号"><a href="#1-测试包裹的符号" class="headerlink" title="1.测试包裹的符号"></a>1.测试包裹的符号</h2><p>  <code>http://127.0.0.1/sqli-labs-master/Less-5/?id=1&#39;</code></p>
-<p>  <code>http://127.0.0.1/sqli-labs-master/Less-5/?id=1&#39; and 1=1--+</code></p>
-<p>  <code>http://127.0.0.1/sqli-labs-master/Less-5/?id=1&#39; and 1=2--+</code></p>
-<p>  在添加单引号后出现报错且1&#x3D;1时正常回显 1&#x3D;2时不回显。</p>
-<h2 id="2-判断列数"><a href="#2-判断列数" class="headerlink" title="2.判断列数"></a>2.判断列数</h2><h2 id=""><a href="#" class="headerlink" title=""></a><img src="/images/QQ_1766578201518.png"></h2><p><img src="/less5-7/e00e07f3-4c84-413e-a950-ede95d438183.png"></p>
-<p>得到列数为三行</p>
-<h1 id="联合注入和报错注入的不同"><a href="#联合注入和报错注入的不同" class="headerlink" title="联合注入和报错注入的不同"></a>联合注入和报错注入的不同</h1><ul>
-<li><p>联合查询注入要求 <strong>前一个查询返回空结果</strong> ，才能让后续的 <code>union</code> 查询结果显示出来。如果前一个查询有结果（如 <code>id=1</code> 存在），数据库会优先显示它的结果，而 <code>union</code> 部分的数据会被忽略。</p>
-</li>
-<li><p>报错注入依赖 <strong>SQL 语句执行并触发错误</strong> ，所以 <strong>前面的条件必须为真</strong> ，否则整个语句不会执行。如果 <code>id=-1</code> 不存在，<code>and</code> 后面的 <code>updatexml</code> 就不会执行，也就不会报错。</p>
-</li>
-<li><h2 id="获取基本信息"><a href="#获取基本信息" class="headerlink" title="获取基本信息"></a>获取基本信息</h2></li>
-<li><p><code>?id=1&#39; and updatexml(1,concat(1,(select database())),3) --+</code></p>
-</li>
-<li><p><img src="/images/QQ_1766578749371.png"></p>
-</li>
-</ul>
-<p>得到数据库名security</p>
-<p>接着再获取表名</p>
-<p><code>?id=1&#39; and updatexml(1,concat(1,(select group_concat(table_name) from information_schema.tables where</code></p>
-<p> table_schema &#x3D; ‘security’)),3) –+&#96;</p>
-<p><img src="/images/QQ_1766579624787.png"></p>
-<p>显然我们需要users里的内容</p>
-<p><code>?id=1&#39; and updatexml(1,concat(1,(select group_concat(column_name) from information_schema.columns where</code></p>
-<p><code> table_schema=&#39;security&#39; and table_name=&#39;users&#39;)),1)--+</code></p>
-<p><img src="/images/QQ_1766580129880.png"></p>
-<p>得到 username 和 password</p>
-<p><img src="/images/image-20251224204900745.png"></p>
-<p><code>?id=1%27%20and%20updatexml(1,concat(1,(select concat(username,&#39;~&#39;,password) from users limit 0,1)),1)--+</code></p>
-<p>得到用户名和密码</p>
-<p>less6也是同理</p>
-<p>只是符号从’变为”而已</p>
-<p>故不再重复</p>
+            <p>less5-6的解题过程和理解</p>
 
             
         </div>
@@ -381,7 +271,7 @@
         
         <span class="tag">
             
-            <a href="/tags/sql-lab/" style="color: #03a9f4">sql_lab</a>
+            <a href="/tags/sql-lab/" style="color: #00bcd4">sql_lab</a>
         </span>
         
     </div>
@@ -415,56 +305,7 @@
     <div class="description">
         <div class="content" v-pre>
             
-            <h1 id="union型注入（less1-less4"><a href="#union型注入（less1-less4" class="headerlink" title="union型注入（less1-less4)"></a>union型注入（less1-less4)</h1><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>其实刚开始做这类型题时我一直在想为什么</p>
-<p>?id&#x3D;1’ 错误 </p>
-<p>?id&#x3D;1’–+ 回显</p>
-<p>后来才发现我想的太过于复杂，只是相当于一个变量的替换</p>
-<p><code>SELECT * FROM users WHERE id=&#39;1&#39;</code> </p>
-<p>由于他get的是?id&#x3D;后的值，所以当我输入1’–+时，返回去的实际上是SELECT * FROM users WHERE id&#x3D;’1’–+’ ，从而使前面正常输出的同时给我们后续构造恶意语句留足了空间接着又可以注释掉我们输入的‘从而保证语句的正常执行。</p>
-<p>接下来的2，3，4题都是同样的原理，只是他们所用的封闭符号不一样罢了，只要试出来封闭符号就可以解决了例如’,’),”),”,’)),”))。</p>
-<h2 id="判断注入点漏洞类型"><a href="#判断注入点漏洞类型" class="headerlink" title="判断注入点漏洞类型"></a>判断注入点漏洞类型</h2><p>开始我们发现存在SQL注入之后，下一步操作就是要判断注入点的漏洞类型。究竟是字符型还是数字型。</p>
-<ol>
-<li><p><em><strong>数字型</strong></em>：直接将注入点的数据当做数字处理，带入了查询语句中，<em><strong>不需要符号闭合</strong></em>。</p>
-</li>
-<li><p><em><strong>字符型</strong></em>：在拼接SQL查询语句时，对用户的输入使用了单引号或双引号进行闭合。<em><strong>需要进行闭合</strong></em>（强调一点：这和数据库中字段本身的数据类型无关，关键在于SQL语句拼接时是否有引号闭合）</p>
-<h3 id="判断方法"><a href="#判断方法" class="headerlink" title="判断方法"></a>判断方法</h3><p><code>?id=1 and 1=1</code> </p>
-<p>正常回显</p>
-<p><code>?id=1 and 1=2</code></p>
-<p>当1&#x3D;1返回了数据，1&#x3D;2返回不了数据是<strong>数字型注入</strong>，</p>
-<blockquote>
-<p>因为这证明我们恶意输入的SQL语句直接带入了后端查询语句中(SELECT * FROM users WHERE id&#x3D;1 and 1&#x3D;2 LIMIT 0,1)，说明输入点没有引号包裹。</p>
-</blockquote>
-<p>当1 and 1&#x3D;2仍然正常回显，则可能是<strong>字符型（需要闭合引号）或逻辑始终为真。</strong></p>
-<p><code>?id=1</code><br>正常回显</p>
-<p><code>?id=1&#39;</code><br>如果报错是字符型。<br>因为单引号破坏了语句原来的闭合结构，证明需要闭合，</p>
-<p>如果没有报错是数字型。<br>因为输入 1’ 通常 不会导致 SQL 语法错误。数据库引擎会尝试将 1’ 转换为数字。大多数数据库会</p>
-<p>要么 忽略 单引号及其后面的非数字字符，只取 1（可能伴随一个隐式转换警告，但查询语法正确，还是能执行成功）。</p>
-<p>要么 报“数据类型转换错误” (如 Conversion failed when converting the varchar value ‘1’’ to data type int)，但这 不同于 字符型注入中 ‘1’’ 导致的 语法错误 (如 Unclosed quotation mark after the character string)。关键区别在于错误类型（转换错误 vs 语法错误）和是否破坏了语句结构。</p>
-<p>因此只有字符型需要进行闭合。</p>
-</li>
-</ol>
-<h2 id="注入"><a href="#注入" class="headerlink" title="注入"></a>注入</h2><h2 id="列数查询"><a href="#列数查询" class="headerlink" title="列数查询"></a>列数查询</h2><p>构造完基本形式，使用order by语句查询一共有多少列。</p>
-<p><code>?id=1&#39; order by 3 --+</code></p>
-<p><em><strong>ORDER BY 3 表示按查询结果中的第3列进行排序</strong></em>。<em><strong>如果查询结果只有2列，那么 ORDER BY 3 就会引用一个不存在的列，从而导致数据库报错。</strong></em> 通过递增 ORDER BY 后的数字（如1,2,3,4…）直到报错，即可确定查询返回的列数（报错前的那个数字就是列数）。–+ 注释掉原语句中可能存在的 LIMIT 等后续部分，保证 ORDER BY 能正确执行和触发错误。</p>
-<p>为什么要判断字段数：在接下来的联合查询形成的语句会是<code>select * where id = 1 union select 1,2,3</code>，联合查询两个select的列数必须一致，<code>*</code>代表所有列，因此要先知道总列数，才能正确设置联合查询的列数</p>
-<h2 id="判断回显"><a href="#判断回显" class="headerlink" title="判断回显"></a>判断回显</h2><p>当我们判断完列数后,由于不是所有列的数据都要进行返回的,所以我们需要查看回显位,判断哪些位置回显的有数据.我们使用特殊符号来标记一下,如果返回了特殊符号,说明这个地方是可以回显的.</p>
-<ul>
-<li><p><code>/?id=1&#39; union select 1,2,3--+</code>   ‘数据回显，但是没有回显注入点<br><code>/?id=0&#39; union select 1,2,3--+</code>   ‘回显注入点为2和3，知道回显点位，我们就可以在该回显点处构造语句来回显我们想要的数据。</p>
-</li>
-<li><p>为什么第二行修改为<code>id=0</code>成功回显：在刚刚的白盒中，我并未介绍<code>LIMIT 0,1</code>的作用，其作用为在查询到的所有数据中，从第0行开始，输出1行。当<code>id=1</code>时，是能够正常查询到数据的，于是只有这一行被输出了。因此我们将id设置为0（或者负数），使得主查询查不到数据，后面联合查询的数据就能正常输出了。主查询没有数据，自然就只会输出后面数据了。</p>
-</li>
-<li><p><code>/?id=0&#39; union select 1,2,database()--+    &#39;</code>数据库security</p>
-<p><code>/?id=0&#39; union select 1,group_concat(table_name),3 from information_schema.tables where table_schema=&#39;security&#39; --+</code>         ‘表名emails,referers,uagents,users</p>
-<p><code>/?id=0&#39; union select 1,group_concat(column_name),3 from information_schema.columns where table_name=&#39;users&#39; and table_schema=&#39;security&#39; --+</code>  ‘字段id,username,password</p>
-<p><code>/?id=0&#39; union select 1,group_concat(username),group_concat(password) from security.users --+</code> </p>
-<ul>
-<li><code>database()</code>：当前数据库名，代替3的位置后，数据库名就会被输出。</li>
-<li><code>group_concat</code>：将得到的所有结果拼接起来并返回，如果不拼接，只会显示查到的第一行结果。</li>
-<li><code>information_schema</code>：是mysql自带的一个特殊的数据库，它记录了所有的表名、列名，通过它，我们就能从数据库名一层层的拆解出我们想要数据的列名、表名，并查询到想要的数据。</li>
-<li>最后就能拿到所有的用户名和密码了。</li>
-</ul>
-</li>
-</ul>
+            <p>less1-4的解题过程和理解</p>
 
             
         </div>
@@ -479,7 +320,7 @@
         
         <span class="tag">
             
-            <a href="/tags/sql-lab/" style="color: #ff7d73">sql_lab</a>
+            <a href="/tags/sql-lab/" style="color: #03a9f4">sql_lab</a>
         </span>
         
     </div>
@@ -513,29 +354,7 @@
     <div class="description">
         <div class="content" v-pre>
             
-            <h1 id="开始的开始"><a href="#开始的开始" class="headerlink" title="开始的开始"></a>开始的开始</h1><p>按照pdf文件的问题进行了搜索，果不其然有很多教程，我选择了其中一个并开始搭建</p>
-<p><img src="/images/%E8%81%94%E6%83%B3%E6%88%AA%E5%9B%BE_20251107225928.png"></p>
-<h2 id="问题开始出现"><a href="#问题开始出现" class="headerlink" title="问题开始出现"></a>问题开始出现</h2><p>在第四步时我使用该命令符一直没有出现图中的反馈，于是我开始搜索该问题，并通过该命令符解决（后来发现其实没出现图中反馈也已经安装完毕）:)</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install -g hexo</span><br></pre></td></tr></table></figure>
-
-<p><img src="/images/image-20251107164823082.png"></p>
-<h3 id="教程帖子的过时又让我栽了跟头"><a href="#教程帖子的过时又让我栽了跟头" class="headerlink" title="教程帖子的过时又让我栽了跟头"></a>教程帖子的过时又让我栽了跟头</h3><p>根据知乎评论区说明，branch处的master在2020年后应改为main，repository的url应改为仓库页面 code中的https链接</p>
-<p><img src="/images/image-20251107165450474.png"></p>
-<h4 id="一半的成功"><a href="#一半的成功" class="headerlink" title="一半的成功"></a>一半的成功</h4><p>解决上述问题我很顺利的成功进行本地部署，现在只差上传到仓库中就完成搭建了</p>
-<p><img src="/images/image-20251107165831683.png"></p>
-<h4 id="事与愿违，最艰难的部分"><a href="#事与愿违，最艰难的部分" class="headerlink" title="事与愿违，最艰难的部分"></a>事与愿违，最艰难的部分</h4><p>跟着教程上传页面后，我打开我的博客却并没有看见我本地部署的页面，当我想再次上传时还出现了如下错误</p>
-<p><img src="/images/image-20251107170213620.png"></p>
-<p>我跟随该教程解决了问题，但我的博客依旧空荡荡，这时我决定不吊死在一棵树上，从b站找到了另一个教程对比着看</p>
-<p><img src="/images/image-20251107170329829.png"></p>
-<p>该教程明显比知乎那个更新，而且我也发现了我遗漏的步骤</p>
-<p><img src="/images/%E8%81%94%E6%83%B3%E6%88%AA%E5%9B%BE_20251107230113.png"></p>
-<p>输入该命令并清除缓存重新上传，再次打开我的博客</p>
-<p><img src="/images/image-20251107170542471.png"></p>
-<p>终于成功了</p>
-<h5 id="小插曲"><a href="#小插曲" class="headerlink" title="小插曲"></a>小插曲</h5><p>在更改主题的过程中我已经不是很顺利</p>
-<p>我按照教程下下来的主题名称和_config.yml中的不一致，导致直接报错，好在教程有提示两者要一致，我修改并重新上传后成功更改主题</p>
-<h6 id="小事决定成败，细节决定成败"><a href="#小事决定成败，细节决定成败" class="headerlink" title="小事决定成败，细节决定成败"></a>小事决定成败，细节决定成败</h6><p>在我以为一切完成的时候，我发现此博客的图片没有办法出现在我的博客上，为此我耗费了很多时间搜索解决办法并一一尝试，最后发现原来是这个方括号里不能有内容，虽然现在过来看发现很傻很粗心明明官方文档的演示就是如此，但是解决了就好，你们现在看到的图片就是我头脑风暴的成果</p>
-<p><img src="/images/%E8%81%94%E6%83%B3%E6%88%AA%E5%9B%BE_20251107230801.png"></p>
+            <p>一切的始发点</p>
 
             
         </div>
@@ -550,7 +369,7 @@
         
         <span class="tag">
             
-            <a href="/tags/hexo/" style="color: #00a596">hexo</a>
+            <a href="/tags/hexo/" style="color: #03a9f4">hexo</a>
         </span>
         
     </div>
