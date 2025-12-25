@@ -240,10 +240,12 @@
 </li>
 <li><p>报错注入依赖 <strong>SQL 语句执行并触发错误</strong> ，所以 <strong>前面的条件必须为真</strong> ，否则整个语句不会执行。如果 <code>id=-1</code> 不存在，<code>and</code> 后面的 <code>updatexml</code> 就不会执行，也就不会报错。</p>
 </li>
+<li><p>其实主要是看会不会返回信息，返回什么信息，例如再less1-4中会根据请求改变返回对应信息因此可以使用联合注入，而再less5-6中由于只会返回you are in…但是会返回报错信息，因此可以使用报错注入</p>
+</li>
 <li><h2 id="获取基本信息"><a href="#获取基本信息" class="headerlink" title="获取基本信息"></a>获取基本信息</h2></li>
 <li><p><code>?id=1&#39; and updatexml(1,concat(1,(select database())),3) --+</code></p>
 </li>
-<li><p><img src="/less5-7/QQ_1766578749371-17666345789581.png"></p>
+<li><p><img src="/images/QQ_1766578749371-17666345789581.png"></p>
 </li>
 </ul>
 <p>得到数据库名security</p>
