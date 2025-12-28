@@ -184,7 +184,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/sql-lab/" style="color: #ff7d73">
+                <a href="/tags/sql-lab/" style="color: #00bcd4">
                     sql_lab
                 </a>
             </span>
@@ -196,10 +196,10 @@
     <div class="content" v-pre>
         <h1 id="union型注入（less1-less4"><a href="#union型注入（less1-less4" class="headerlink" title="union型注入（less1-less4)"></a>union型注入（less1-less4)</h1><h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>其实刚开始做这类型题时我一直在想为什么</p>
 <p>?id&#x3D;1’ 错误 </p>
-<p>?id&#x3D;1’–+ 回显</p>
+<p>?id&#x3D;1’–  回显</p>
 <p>后来才发现我想的太过于复杂，只是相当于一个变量的替换</p>
 <p><code>SELECT * FROM users WHERE id=&#39;1&#39;</code> </p>
-<p>由于他get的是?id&#x3D;后的值，所以当我输入1’–+时，返回去的实际上是SELECT * FROM users WHERE id&#x3D;’1’–+’ ，从而使前面正常输出的同时给我们后续构造恶意语句留足了空间接着又可以注释掉我们输入的‘从而保证语句的正常执行。</p>
+<p>由于他get的是?id&#x3D;后的值，所以当我输入1’– 时，返回去的实际上是SELECT * FROM users WHERE id&#x3D;’1’–+’ ，从而使前面正常输出的同时给我们后续构造恶意语句留足了空间接着又可以注释掉我们输入的‘从而保证语句的正常执行。</p>
 <p>接下来的2，3，4题都是同样的原理，只是他们所用的封闭符号不一样罢了，只要试出来封闭符号就可以解决了例如’,’),”),”,’)),”))。</p>
 <h2 id="判断注入点漏洞类型"><a href="#判断注入点漏洞类型" class="headerlink" title="判断注入点漏洞类型"></a>判断注入点漏洞类型</h2><p>开始我们发现存在SQL注入之后，下一步操作就是要判断注入点的漏洞类型。究竟是字符型还是数字型。</p>
 <ol>
@@ -224,12 +224,12 @@
 </li>
 </ol>
 <h2 id="注入"><a href="#注入" class="headerlink" title="注入"></a>注入</h2><h2 id="列数查询"><a href="#列数查询" class="headerlink" title="列数查询"></a>列数查询</h2><p>构造完基本形式，使用order by语句查询一共有多少列。</p>
-<p><code>?id=1&#39; order by 3 --+</code></p>
+<p>&#96;&#96;?id&#x3D;1’ order by 3 –&#96; </p>
 <p><em><strong>ORDER BY 3 表示按查询结果中的第3列进行排序</strong></em>。<em><strong>如果查询结果只有2列，那么 ORDER BY 3 就会引用一个不存在的列，从而导致数据库报错。</strong></em> 通过递增 ORDER BY 后的数字（如1,2,3,4…）直到报错，即可确定查询返回的列数（报错前的那个数字就是列数）。–+ 注释掉原语句中可能存在的 LIMIT 等后续部分，保证 ORDER BY 能正确执行和触发错误。</p>
 <p>为什么要判断字段数：在接下来的联合查询形成的语句会是<code>select * where id = 1 union select 1,2,3</code>，联合查询两个select的列数必须一致，<code>*</code>代表所有列，因此要先知道总列数，才能正确设置联合查询的列数</p>
 <h2 id="判断回显"><a href="#判断回显" class="headerlink" title="判断回显"></a>判断回显</h2><p>当我们判断完列数后,由于不是所有列的数据都要进行返回的,所以我们需要查看回显位,判断哪些位置回显的有数据.我们使用特殊符号来标记一下,如果返回了特殊符号,说明这个地方是可以回显的.</p>
 <ul>
-<li><p><code>/?id=1&#39; union select 1,2,3--+</code>   ‘数据回显，但是没有回显注入点<br><code>/?id=0&#39; union select 1,2,3--+</code>   ‘回显注入点为2和3，知道回显点位，我们就可以在该回显点处构造语句来回显我们想要的数据。</p>
+<li><p><code>/?id=1&#39; union select 1,2,3-- </code>   ‘数据回显，但是没有回显注入点<br>&#96;&#96;&#x2F;?id&#x3D;0’ union select 1,2,3–&#96;    ‘回显注入点为2和3，知道回显点位，我们就可以在该回显点处构造语句来回显我们想要的数据。</p>
 </li>
 <li><p>为什么第二行修改为<code>id=0</code>成功回显：在刚刚的白盒中，我并未介绍<code>LIMIT 0,1</code>的作用，其作用为在查询到的所有数据中，从第0行开始，输出1行。当<code>id=1</code>时，是能够正常查询到数据的，于是只有这一行被输出了。因此我们将id设置为0（或者负数），使得主查询查不到数据，后面联合查询的数据就能正常输出了。主查询没有数据，自然就只会输出后面数据了。</p>
 </li>

