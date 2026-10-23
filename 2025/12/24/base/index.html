@@ -5,8 +5,17 @@
     <meta charset="utf-8" />
     <title>sql注入基础 | blackceng的小窝</title>
     <meta name="author" content="blackceng" />
-    <meta name="description" content="我们要做的，就是追上那该死的火车，CJ！" />
-    <meta name="keywords" content="" />
+    <meta name="description" content="SQL基础语法知识" />
+    <meta name="keywords" content="sql_lab,SQL注入, CTF, 网络安全, 渗透测试, blackceng" />
+    <link rel="canonical" href="https://blackceng855.github.io/2025/12/24/base/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="sql注入基础 | blackceng的小窝" />
+    <meta property="og:description" content="SQL基础语法知识" />
+    <meta property="og:url" content="https://blackceng855.github.io/2025/12/24/base/" />
+    <meta property="og:site_name" content="blackceng的小窝" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:image" content="https://blackceng855.github.io/images/avatar.jpg" />
+    <meta name="twitter:card" content="summary" />
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
@@ -22,8 +31,6 @@
     href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
 />
 <script> const mixins = {}; </script>
-
-<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
 
 
 <script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -48,7 +55,8 @@
 
 <link rel="stylesheet" href="/css/main.css" />
 
-<meta name="generator" content="Hexo 8.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"><link rel="alternate" href="/atom.xml" title="blackceng的小窝" type="application/atom+xml">
+</head>
 <body>
     <div id="layout">
         <transition name="fade">
@@ -202,8 +210,10 @@
 <h5 id="3-1-AND-OR优先级规则"><a href="#3-1-AND-OR优先级规则" class="headerlink" title="3.1. AND&#x2F;OR优先级规则"></a>3.1. AND&#x2F;OR优先级规则</h5><p><em><strong>AND优先级高于OR</strong></em></p>
 <p><code>条件1 OR 条件2 AND 条件3</code><br><code>-- 等价于</code><br><code>条件1 OR (条件2 AND 条件3)</code><br><code>-- 使用括号可以改变优先级</code><br><code>(条件1 OR 条件2) AND 条件3</code></p>
 <h5 id="4-SQL注释方法"><a href="#4-SQL注释方法" class="headerlink" title="4. SQL注释方法"></a>4. SQL注释方法</h5><p>注释类型   	符号	    说明		注入<br>单行注释		–		需空格结尾	id&#x3D;1’ –<br>单行注释		#		MySQL特有	id&#x3D;1’ #<br>多行注释		&#x2F;<em>内容</em>&#x2F;		可跨行		id&#x3D;1’&#x2F;<em>注入内容</em>&#x2F;</p>
-<h4 id="二-SQL注入关键函数"><a href="#二-SQL注入关键函数" class="headerlink" title="二: SQL注入关键函数"></a>二: SQL注入关键函数</h4><h5 id="1-UNION操作符"><a href="#1-UNION操作符" class="headerlink" title="1. UNION操作符"></a>1. UNION操作符</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SELECT col1, col2 FROM table1 </span><br><span class="line">UNION </span><br><span class="line">SELECT colA, colB FROM table2;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
+<h4 id="二-SQL注入关键函数"><a href="#二-SQL注入关键函数" class="headerlink" title="二: SQL注入关键函数"></a>二: SQL注入关键函数</h4><h5 id="1-UNION操作符"><a href="#1-UNION操作符" class="headerlink" title="1. UNION操作符"></a>1. UNION操作符</h5><pre><code>SELECT col1, col2 FROM table1 
+UNION 
+SELECT colA, colB FROM table2;
+</code></pre>
 <p>前后SELECT列数必须相同,如上面语句,都需要是两列<br>对应列数据类型需兼容</p>
 <p>union操作符可以使两条命令一起执行。</p>
 <h5 id="2-LIMIT分页控制"><a href="#2-LIMIT分页控制" class="headerlink" title="2. LIMIT分页控制"></a>2. LIMIT分页控制</h5><p><code>/* 获取第一行 */</code><br><code>SELECT * FROM users LIMIT 1;</code></p>

