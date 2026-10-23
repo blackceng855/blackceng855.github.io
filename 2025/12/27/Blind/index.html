@@ -225,7 +225,7 @@ char()        将ASCII码转换为对应的字符
 <p>报错说明是字符型且闭合符号为’</p>
 <h2 id="确定数据库名长度"><a href="#确定数据库名长度" class="headerlink" title="确定数据库名长度"></a>确定数据库名长度</h2><pre><code>?id=1&#39;and length(database())=8--+
 </code></pre>
-<p><img loading="lazy" decoding="async" src="/images/QQ_1766906142735.png"></p>
+<p><img loading="lazy" decoding="async" src="/images/QQ_1766906142735.webp"></p>
 <p>正常回显可知长度为8</p>
 <h2 id="使用bp爆破数据库"><a href="#使用bp爆破数据库" class="headerlink" title="使用bp爆破数据库"></a>使用bp爆破数据库</h2><p>打开bp并且开启拦截</p>
 <p><img loading="lazy" decoding="async" src="/images/QQ_1766908050028.png"></p>
@@ -233,7 +233,7 @@ char()        将ASCII码转换为对应的字符
 <pre><code>http://127.0.0.1/sqli-labs-master/Less-8/?id=1&#39; and left(database(),1)&gt;&#39;a&#39;--+
 </code></pre>
 <p>回车后bp拦截到数据包</p>
-<p><img loading="lazy" decoding="async" src="/images/QQ_1766908275439.png"></p>
+<p><img loading="lazy" decoding="async" src="/images/QQ_1766908275439.webp"></p>
 <p>把这个数据包发送到intruder</p>
 <p><img loading="lazy" decoding="async" src="/images/QQ_1766908329226.png"></p>
 <p>在a位置处选中并点击添加payload位置</p>

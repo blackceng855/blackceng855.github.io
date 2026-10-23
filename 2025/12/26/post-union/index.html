@@ -192,7 +192,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/sql-lab/" style="color: #00bcd4">
+                <a href="/tags/sql-lab/" style="color: #ffa2c4">
                     sql_lab
                 </a>
             </span>
@@ -204,13 +204,13 @@
     <div class="content" v-pre>
         <h1 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h1><p>其实和less1-4的原理没有区别，只是在请求方式上改变（即只是输入和构造代码的地方，less1-4是get请求（向服务端请求数据）less11-12是post请求（向服务端发送数据）。故其他不再赘述。</p>
 <h1 id="手工注入过程"><a href="#手工注入过程" class="headerlink" title="手工注入过程"></a>手工注入过程</h1><h2 id="判断注入类型"><a href="#判断注入类型" class="headerlink" title="判断注入类型"></a>判断注入类型</h2><p>在username栏键入a’</p>
-<p><img loading="lazy" decoding="async" src="/images/0b12bc95-309f-4aff-884d-db258489aa18.png"></p>
+<p><img loading="lazy" decoding="async" src="/images/0b12bc95-309f-4aff-884d-db258489aa18.webp"></p>
 <p>可以看见报错，说明存在sql注入且是字符型。</p>
 <p>而且当我们正常登录时，网页会正常回显对应信息，因此可以使用union注入。<img loading="lazy" decoding="async" src="/images/QQ_1766741720377.png"></p>
 <h2 id="判断列数"><a href="#判断列数" class="headerlink" title="判断列数"></a>判断列数</h2><p>在username键入</p>
 <pre><code>a&#39; or 1=1 order by 2--+
 </code></pre>
-<p><img loading="lazy" decoding="async" src="/images/QQ_1766742067749.png"></p>
+<p><img loading="lazy" decoding="async" src="/images/QQ_1766742067749.webp"></p>
 <p><img loading="lazy" decoding="async" src="/images/QQ_1766742130031.png"></p>
 <p>可以判断有两列。</p>
 <h2 id="查看回显位置"><a href="#查看回显位置" class="headerlink" title="查看回显位置"></a>查看回显位置</h2><p><img loading="lazy" decoding="async" src="/images/QQ_1766742524265.png"></p>
